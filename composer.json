@@ -4,8 +4,8 @@
 	"description" : "",
 	"license": "GPL-2.0-or-later",
 	"require": {
-		"php": ">=7.0 <7.3",
-		"typo3/cms-core": "^9.5"
+		"php": "^7.4",
+		"typo3/cms-core": "^10.4"
 	},
 	"replace": {
 		"pti_forms": "self.version"
@@ -13,6 +13,11 @@
 	"autoload": {
 		"psr-4": {
 			"PrototypeIntegration\\Forms\\": "Classes/"
+		}
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "pti_forms"
 		}
 	}
 }
