@@ -1,52 +1,37 @@
 <?php
-
+declare(strict_types=1);
 
 namespace PrototypeIntegration\Forms;
 
 use TYPO3\CMS\Extbase\Error\Message;
+use TYPO3\CMS\Extbase\Error\Result;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 
 class Field
 {
+    protected FormContext $formContext;
+    protected ExtensionService $extensionService;
+    
     /**
-     * @var FormContext
-     */
-    protected $formContext;
-
-    /**
-     * @var bool
-     *
      * True if this field is mapped to a property of its form's object
      */
-    protected $propertyField = false;
+    protected bool $propertyField = false;
 
     /**
-     * @var string
-     *
      * The name attribute of the field.
      */
-    protected $name;
+    protected string $name;
+    
+    protected array $attributes = [];
 
     /**
-     * @var array
-     */
-    protected $attributes = [];
-
-    /**
-     * @var bool
-     *
      * Whether or not the field will display the value submitted with the last request
      */
-    protected $respectSubmittedDataValue = true;
+    protected bool $respectSubmittedDataValue = true;
 
     protected $value;
 
     protected $defaultValue;
-
-    /**
-     * @var ExtensionService
-     */
-    protected $extensionService;
 
     public function __construct(ExtensionService $extensionService)
     {
@@ -60,19 +45,12 @@ class Field
             'value' => $this->renderValue()
         ]);
     }
-
-    /**
-     * @return string
-     */
+    
     public function getDefaultValue(): string
     {
         return $this->defaultValue;
     }
-
-    /**
-     * @param string $defaultValue
-     * @return Field
-     */
+    
     public function setDefaultValue(string $defaultValue): Field
     {
         $this->defaultValue = $defaultValue;
@@ -88,10 +66,8 @@ class Field
     /**
      * Sets the name of the field to the given property name and converts
      * the field to a property field.
+     * 
      * @see $propertyField
-     *
-     * @param string $propertyName
-     * @return Field
      */
     public function setProperty(string $propertyName): Field
     {
@@ -103,8 +79,6 @@ class Field
     /**
      * The unprefixed name of the field.
      * This is different from renderName, which adds the required prefix
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -128,7 +102,7 @@ class Field
         return $this->propertyField;
     }
 
-    public function isPlainField()
+    public function isPlainField(): bool
     {
         return ! $this->propertyField;
     }
@@ -138,11 +112,7 @@ class Field
         $this->propertyField = $propertyField;
         return $this;
     }
-
-    /**
-     * @param bool $respectSubmittedDataValue
-     * @return Field
-     */
+    
     public function setRespectSubmittedDataValue(bool $respectSubmittedDataValue): Field
     {
         $this->respectSubmittedDataValue = $respectSubmittedDataValue;
@@ -195,11 +165,8 @@ class Field
 
         return [];
     }
-
-    /**
-     * @return \TYPO3\CMS\Extbase\Error\Result
-     */
-    protected function getMappingResults(): \TYPO3\CMS\Extbase\Error\Result
+    
+    protected function getMappingResults(): Result
     {
         if ($this->isPropertyField()) {
             $objectMappingResults = $this->formContext->getControllerContext()

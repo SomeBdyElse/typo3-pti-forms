@@ -2,6 +2,7 @@
 
 namespace PrototypeIntegration\Forms;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ControllerContext;
 use TYPO3\CMS\Extbase\Mvc\Controller\MvcPropertyMappingConfigurationService;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -62,8 +63,13 @@ class Form
         $this->mvcPropertyMappingConfigurationService = $mvcPropertyMappingConfigurationService;
         $this->extensionService = $extensionService;
         $this->hashService = $hashService;
+    }
 
-        $this->formContext = $this->objectManager->get(FormContext::class);
+    public function setControllerContext(ControllerContext $controllerContext)
+    {
+        $this->controllerContext = $controllerContext;
+
+        $this->formContext = GeneralUtility::makeInstance(FormContext::class);
         $this->formContext->setControllerContext($this->controllerContext);
     }
 
@@ -78,7 +84,7 @@ class Form
         }
 
         /** @var Field $field */
-        $field = $this->objectManager->get(Field::class, $this->formContext);
+        $field = GeneralUtility::makeInstance(Field::class);
         $field->setFormContext($this->formContext);
         $field->setPropertyField($propertyField);
         $field->setName($nameOrProperty);
@@ -152,7 +158,6 @@ class Form
     {
         $request = $this->formContext->getControllerContext()->getRequest();
         $extensionName = $request->getControllerExtensionName();
-        $vendorName = $request->getControllerVendorName();
         $controllerName = $request->getControllerName();
         $actionName = $request->getControllerActionName();
         $actionRequest = [
@@ -167,15 +172,6 @@ class Form
             ->setValue($extensionName)
             ->setRespectSubmittedDataValue(false)
             ->render();
-
-        if ($vendorName !== null) {
-            $hiddenFields[] = $this->createPlainHiddenField('__referrer[@vendor]')
-                ->setValue($vendorName)
-                ->setRespectSubmittedDataValue(false)
-                ->render();
-
-            $actionRequest['@vendor'] = $vendorName;
-        }
 
         $hiddenFields[] = $this->createPlainHiddenField('__referrer[@controller]')
             ->setValue($controllerName)
