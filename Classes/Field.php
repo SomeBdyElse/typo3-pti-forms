@@ -66,7 +66,7 @@ class Field
     /**
      * Sets the name of the field to the given property name and converts
      * the field to a property field.
-     * 
+     *
      * @see $propertyField
      */
     public function setProperty(string $propertyName): Field
@@ -134,7 +134,6 @@ class Field
             } else {
                 return $submittedArguments[$this->formContext->getObjectName()][$this->name];
             }
-
         }
 
         return $this->defaultValue;
@@ -217,7 +216,8 @@ class Field
 
     public function prefixPropertyFieldname(string $propertyName): string
     {
-        return sprintf('%s[%s][%s]',
+        return sprintf(
+            '%s[%s][%s]',
             $this->getFieldNamePrefix(),
             $this->formContext->getObjectName(),
             $propertyName

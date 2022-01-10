@@ -113,12 +113,12 @@ class Form
     {
         $fields = [];
         /** @var Field $field */
-        foreach($this->fields as $identifier => $field) {
+        foreach ($this->fields as $identifier => $field) {
             $fields[$identifier] = $field->render();
         }
 
         $hiddenFields = [];
-        foreach($this->hiddenFields as $field) {
+        foreach ($this->hiddenFields as $field) {
             $hiddenFields[] = $field->render();
         }
         $hiddenFields = array_merge($hiddenFields, $this->renderHiddenFields());
@@ -200,7 +200,7 @@ class Form
     {
         $fieldNames = [];
         /** @var Field $field */
-        foreach($this->fields as $field) {
+        foreach ($this->fields as $field) {
             $fieldNames[] = $field->renderName();
         }
 
