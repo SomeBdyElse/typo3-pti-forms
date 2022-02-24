@@ -7,3 +7,4 @@ services:
 
   PrototypeIntegration\Forms\:
     resource: '../Classes/*'
+    shared: false
