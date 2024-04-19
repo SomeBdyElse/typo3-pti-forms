@@ -10,7 +10,6 @@ use TYPO3\CMS\Extbase\Service\ExtensionService;
 class Field
 {
     protected FormContext $formContext;
-    protected ExtensionService $extensionService;
     
     /**
      * True if this field is mapped to a property of its form's object
@@ -33,9 +32,8 @@ class Field
 
     protected $defaultValue;
 
-    public function __construct(ExtensionService $extensionService)
+    public function __construct(protected ExtensionService $extensionService)
     {
-        $this->extensionService = $extensionService;
     }
 
     public function render(): array

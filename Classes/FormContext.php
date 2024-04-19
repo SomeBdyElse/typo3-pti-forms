@@ -25,9 +25,6 @@ class FormContext
         return $this->objectName;
     }
 
-    /**
-     * @param string $objectName
-     */
     public function setObjectName(string $objectName): void
     {
         $this->objectName = $objectName;
@@ -41,9 +38,6 @@ class FormContext
         return $this->controllerContext;
     }
 
-    /**
-     * @param ControllerContext $controllerContext
-     */
     public function setControllerContext(ControllerContext $controllerContext): void
     {
         $this->controllerContext = $controllerContext;
