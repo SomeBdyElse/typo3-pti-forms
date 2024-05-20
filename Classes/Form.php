@@ -5,7 +5,6 @@ namespace PrototypeIntegration\Forms;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ControllerContext;
 use TYPO3\CMS\Extbase\Mvc\Controller\MvcPropertyMappingConfigurationService;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Security\Cryptography\HashService;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 
@@ -15,11 +14,6 @@ class Form
      * @var ControllerContext
      */
     protected $controllerContext;
-
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
 
     /**
      * @var MvcPropertyMappingConfigurationService
@@ -53,13 +47,11 @@ class Form
 
     public function __construct(
         ControllerContext $controllerContext,
-        ObjectManager $objectManager,
         MvcPropertyMappingConfigurationService $mvcPropertyMappingConfigurationService,
         ExtensionService $extensionService,
         HashService $hashService
     ) {
         $this->controllerContext = $controllerContext;
-        $this->objectManager = $objectManager;
         $this->mvcPropertyMappingConfigurationService = $mvcPropertyMappingConfigurationService;
         $this->extensionService = $extensionService;
         $this->hashService = $hashService;
