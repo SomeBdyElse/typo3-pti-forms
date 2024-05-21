@@ -1,6 +1,5 @@
 <?php
 
-
 namespace PrototypeIntegration\Forms;
 
 use TYPO3\CMS\Extbase\Mvc\Controller\ControllerContext;
@@ -45,6 +44,6 @@ class FormContext
 
     public function isObjectForm(): bool
     {
-        return ! empty($this->objectName);
+        return !empty($this->objectName);
     }
 }

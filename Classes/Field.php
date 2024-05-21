@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace PrototypeIntegration\Forms;
@@ -10,7 +11,7 @@ use TYPO3\CMS\Extbase\Service\ExtensionService;
 class Field
 {
     protected FormContext $formContext;
-    
+
     /**
      * True if this field is mapped to a property of its form's object
      */
@@ -20,7 +21,7 @@ class Field
      * The name attribute of the field.
      */
     protected string $name;
-    
+
     protected array $attributes = [];
 
     /**
@@ -40,24 +41,26 @@ class Field
     {
         return array_merge($this->attributes, [
             'name' => $this->renderName(),
-            'value' => $this->renderValue()
+            'value' => $this->renderValue(),
         ]);
     }
-    
+
     public function getDefaultValue(): string
     {
         return $this->defaultValue;
     }
-    
+
     public function setDefaultValue(string $defaultValue): Field
     {
         $this->defaultValue = $defaultValue;
+
         return $this;
     }
 
     public function setFormContext(FormContext $formContext): Field
     {
         $this->formContext = $formContext;
+
         return $this;
     }
 
@@ -71,6 +74,7 @@ class Field
     {
         $this->name = $propertyName;
         $this->propertyField = true;
+
         return $this;
     }
 
@@ -86,12 +90,14 @@ class Field
     public function setName(string $name): Field
     {
         $this->name = $name;
+
         return $this;
     }
 
     public function setValue($value): Field
     {
         $this->value = $value;
+
         return $this;
     }
 
@@ -102,36 +108,38 @@ class Field
 
     public function isPlainField(): bool
     {
-        return ! $this->propertyField;
+        return !$this->propertyField;
     }
 
     public function setPropertyField(bool $propertyField): Field
     {
         $this->propertyField = $propertyField;
+
         return $this;
     }
-    
+
     public function setRespectSubmittedDataValue(bool $respectSubmittedDataValue): Field
     {
         $this->respectSubmittedDataValue = $respectSubmittedDataValue;
+
         return $this;
     }
 
     public function renderValue()
     {
-        if (! is_null($this->value)) {
+        if (!is_null($this->value)) {
             return $this->value;
         }
 
         $originalRequest = $this->formContext->getControllerContext()->getRequest()->getOriginalRequest();
-        $submitted = ! empty($originalRequest);
+        $submitted = !empty($originalRequest);
         if ($this->respectSubmittedDataValue && $submitted) {
             $submittedArguments = $originalRequest->getArguments();
             if ($this->isPlainField()) {
                 return $submittedArguments[$this->name];
-            } else {
-                return $submittedArguments[$this->formContext->getObjectName()][$this->name];
             }
+
+            return $submittedArguments[$this->formContext->getObjectName()][$this->name];
         }
 
         return $this->defaultValue;
@@ -139,14 +147,14 @@ class Field
 
     public function getValidationMessages(): array
     {
-        $submitted = ! empty($this->formContext->getControllerContext()->getRequest()->getOriginalRequest());
+        $submitted = !empty($this->formContext->getControllerContext()->getRequest()->getOriginalRequest());
 
         if ($submitted) {
             $mappingResults = $this->getMappingResults();
             $mappingResultMessages = [
                 $mappingResults->getErrors(),
                 $mappingResults->getWarnings(),
-                $mappingResults->getNotices()
+                $mappingResults->getNotices(),
             ];
 
             $messages = [];
@@ -162,7 +170,7 @@ class Field
 
         return [];
     }
-    
+
     protected function getMappingResults(): Result
     {
         if ($this->isPropertyField()) {
@@ -187,6 +195,7 @@ class Field
         if ($this->isPropertyField()) {
             return $this->prefixPropertyFieldname($this->name);
         }
+
         return $this->prefixFieldname($this->name);
     }
 
@@ -199,6 +208,7 @@ class Field
         if ($extensionName !== null && $pluginName != null) {
             return $this->extensionService->getPluginNamespace($extensionName, $pluginName);
         }
+
         return '';
     }
 
@@ -209,6 +219,7 @@ class Field
         if (count($fieldNameSegments) > 1) {
             $fieldName .= '[' . $fieldNameSegments[1];
         }
+
         return $fieldName;
     }
 
@@ -225,18 +236,21 @@ class Field
     public function setAttribute(string $attribute, string $value): Field
     {
         $this->attributes[$attribute] = $value;
+
         return $this;
     }
 
     public function setMultipleAttributes(array $array): Field
     {
         $this->attributes = array_merge($this->attributes, $array);
+
         return $this;
     }
 
     public function removeAttribute(string $attribute): Field
     {
         unset($this->attributes[$attribute]);
+
         return $this;
     }
 }

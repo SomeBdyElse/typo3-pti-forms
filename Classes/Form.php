@@ -67,7 +67,7 @@ class Form
 
     public function createField(string $identifier, string $nameOrProperty = '', bool $propertyField = null): Field
     {
-        if (! $nameOrProperty) {
+        if (!$nameOrProperty) {
             $nameOrProperty = $identifier;
         }
 
@@ -90,6 +90,7 @@ class Form
     {
         $field = $this->createField($identifier, $propertyOrName, $type);
         $this->hiddenFields[] = $field;
+
         return $field;
     }
 
@@ -97,9 +98,9 @@ class Form
     {
         $field = $this->createField($identifier, $propertyOrName, false);
         $this->hiddenFields[] = $field;
+
         return $field;
     }
-
 
     public function render(): array
     {
@@ -130,8 +131,8 @@ class Form
     }
 
     /**
-     * @return array
      * @throws \TYPO3\CMS\EXTBASE\Security\Exception\InvalidArgumentForHashGenerationException
+     * @return array
      */
     protected function renderTrustedPropertiesField(): array
     {

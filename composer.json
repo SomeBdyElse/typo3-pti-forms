@@ -1,23 +1,23 @@
 {
-	"name": "pti/pti-forms",
-	"type": "typo3-cms-extension",
-	"description" : "",
-	"license": "GPL-2.0-or-later",
-	"require": {
-		"php": "^8.2",
-		"typo3/cms-core": "^11.5"
-	},
-	"replace": {
-		"pti_forms": "self.version"
-	},
-	"autoload": {
-		"psr-4": {
-			"PrototypeIntegration\\Forms\\": "Classes/"
-		}
-	},
-	"extra": {
-		"typo3/cms": {
-			"extension-key": "pti_forms"
-		}
-	}
+    "name": "pti/pti-forms",
+    "type": "typo3-cms-extension",
+    "description": "",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": "^8.2",
+        "typo3/cms-core": "^11.5"
+    },
+    "replace": {
+        "pti_forms": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "PrototypeIntegration\\Forms\\": "Classes/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "pti_forms"
+        }
+    }
 }
