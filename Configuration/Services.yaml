@@ -8,3 +8,9 @@ services:
     PrototypeIntegration\Forms\:
         resource: '../Classes/*'
         shared: false
+
+    PrototypeIntegration\Forms\Field:
+        public: true
+
+    PrototypeIntegration\Forms\Form:
+        public: true

@@ -131,7 +131,7 @@ class Field
             return $this->value;
         }
 
-        $originalRequest = $this->formContext->getControllerContext()->getRequest()->getOriginalRequest();
+        $originalRequest = $this->formContext->getRequest()->getAttribute('extbase')->getOriginalRequest();
         $submitted = !empty($originalRequest);
         if ($this->respectSubmittedDataValue && $submitted) {
             $submittedArguments = $originalRequest->getArguments();
@@ -147,7 +147,7 @@ class Field
 
     public function getValidationMessages(): array
     {
-        $submitted = !empty($this->formContext->getControllerContext()->getRequest()->getOriginalRequest());
+        $submitted = !empty($this->formContext->getRequest()->getAttribute('extbase')->getOriginalRequest());
 
         if ($submitted) {
             $mappingResults = $this->getMappingResults();
@@ -174,15 +174,15 @@ class Field
     protected function getMappingResults(): Result
     {
         if ($this->isPropertyField()) {
-            $objectMappingResults = $this->formContext->getControllerContext()
-                ->getRequest()
+            $objectMappingResults = $this->formContext->getRequest()
+                ->getAttribute('extbase')
                 ->getOriginalRequestMappingResults()
                 ->forProperty($this->formContext->getObjectName());
 
             $mappingResults = $objectMappingResults->forProperty($this->name);
         } else {
-            $mappingResults = $this->formContext->getControllerContext()
-                ->getRequest()
+            $mappingResults = $this->formContext->getRequest()
+                ->getAttribute('extbase')
                 ->getOriginalRequestMappingResults()
                 ->forProperty($this->name);
         }
@@ -201,7 +201,7 @@ class Field
 
     public function getFieldNamePrefix(): string
     {
-        $request = $this->formContext->getControllerContext()->getRequest();
+        $request = $this->formContext->getRequest();
         $extensionName = $request->getControllerExtensionName();
         $pluginName = $request->getPluginName();
 

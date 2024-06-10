@@ -2,7 +2,7 @@
 
 namespace PrototypeIntegration\Forms;
 
-use TYPO3\CMS\Extbase\Mvc\Controller\ControllerContext;
+use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 
 class FormContext
 {
@@ -12,9 +12,9 @@ class FormContext
     protected $objectName;
 
     /**
-     * @var ControllerContext
+     * @var RequestInterface
      */
-    protected $controllerContext;
+    protected $request;
 
     /**
      * @return string
@@ -30,16 +30,16 @@ class FormContext
     }
 
     /**
-     * @return ControllerContext
+     * @return RequestInterface
      */
-    public function getControllerContext(): ControllerContext
+    public function getRequest(): RequestInterface
     {
-        return $this->controllerContext;
+        return $this->request;
     }
 
-    public function setControllerContext(ControllerContext $controllerContext): void
+    public function setRequest(RequestInterface $request): void
     {
-        $this->controllerContext = $controllerContext;
+        $this->request = $request;
     }
 
     public function isObjectForm(): bool

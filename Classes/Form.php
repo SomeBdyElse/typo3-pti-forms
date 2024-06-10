@@ -3,18 +3,13 @@
 namespace PrototypeIntegration\Forms;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Controller\ControllerContext;
 use TYPO3\CMS\Extbase\Mvc\Controller\MvcPropertyMappingConfigurationService;
+use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\Security\Cryptography\HashService;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 
 class Form
 {
-    /**
-     * @var ControllerContext
-     */
-    protected $controllerContext;
-
     /**
      * @var MvcPropertyMappingConfigurationService
      */
@@ -46,23 +41,19 @@ class Form
     protected $hiddenFields = [];
 
     public function __construct(
-        ControllerContext $controllerContext,
         MvcPropertyMappingConfigurationService $mvcPropertyMappingConfigurationService,
         ExtensionService $extensionService,
         HashService $hashService
     ) {
-        $this->controllerContext = $controllerContext;
         $this->mvcPropertyMappingConfigurationService = $mvcPropertyMappingConfigurationService;
         $this->extensionService = $extensionService;
         $this->hashService = $hashService;
     }
 
-    public function setControllerContext(ControllerContext $controllerContext)
+    public function setRequest(RequestInterface $request)
     {
-        $this->controllerContext = $controllerContext;
-
         $this->formContext = GeneralUtility::makeInstance(FormContext::class);
-        $this->formContext->setControllerContext($this->controllerContext);
+        $this->formContext->setRequest($request);
     }
 
     public function createField(string $identifier, string $nameOrProperty = '', bool $propertyField = null): Field
@@ -149,7 +140,7 @@ class Form
 
     protected function renderHiddenReferrerFields(): array
     {
-        $request = $this->formContext->getControllerContext()->getRequest();
+        $request = $this->formContext->getRequest();
         $extensionName = $request->getControllerExtensionName();
         $controllerName = $request->getControllerName();
         $actionName = $request->getControllerActionName();
@@ -218,11 +209,6 @@ class Form
         }
 
         $this->hiddenFields[$identifier] = $field;
-    }
-
-    public function setObject($object)
-    {
-        $this->formContext->setObject($object);
     }
 
     public function setObjectName(string $name)
