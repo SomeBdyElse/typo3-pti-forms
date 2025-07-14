@@ -11,6 +11,8 @@ services:
 
     PrototypeIntegration\Forms\Field:
         public: true
+        shared: false
 
     PrototypeIntegration\Forms\Form:
         public: true
+        shared: false
