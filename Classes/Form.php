@@ -2,10 +2,11 @@
 
 namespace PrototypeIntegration\Forms;
 
+use TYPO3\CMS\Core\Crypto\HashService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\MvcPropertyMappingConfigurationService;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use TYPO3\CMS\Extbase\Security\Cryptography\HashService;
+use TYPO3\CMS\Extbase\Security\HashScope;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 
 class Form
@@ -127,7 +128,6 @@ class Form
      */
     protected function renderTrustedPropertiesField(): array
     {
-        /** @var Field $trustedPropertiesField */
         $trustedPropertiesField = $this->createPlainHiddenField('__trustedProperties');
         $trustedPropertiesField->setValue($this->mvcPropertyMappingConfigurationService->generateTrustedPropertiesToken(
             $this->getFormFieldNames(),
@@ -168,12 +168,12 @@ class Form
             ->render();
 
         $hiddenFields[] = $this->createPlainHiddenField('__referrer[arguments]')
-            ->setValue($this->hashService->appendHmac(base64_encode(serialize($request->getArguments()))))
+            ->setValue($this->hashService->appendHmac(base64_encode(serialize($request->getArguments())), HashScope::ReferringArguments->prefix()))
             ->setRespectSubmittedDataValue(false)
             ->render();
 
         $hiddenFields[] = $this->createPlainHiddenField('__referrer[@request]')
-            ->setValue($this->hashService->appendHmac(serialize($actionRequest)))
+            ->setValue($this->hashService->appendHmac(json_encode($actionRequest), HashScope::ReferringRequest->prefix()))
             ->setRespectSubmittedDataValue(false)
             ->render();
 
@@ -185,7 +185,9 @@ class Form
         $fieldNames = [];
         /** @var Field $field */
         foreach ($this->fields as $field) {
-            $fieldNames[] = $field->renderName();
+            foreach ($field->tokenNames() as $tokenName) {
+                $fieldNames[] = $tokenName;
+            }
         }
 
         return $fieldNames;
