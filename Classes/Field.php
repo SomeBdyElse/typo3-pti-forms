@@ -25,6 +25,13 @@ class Field
     protected array $attributes = [];
 
     /**
+     * Additional names required for trusted properties (required for e.g form upload fields)
+     *
+     * @var string[]
+     */
+    protected array $tokenNames = [];
+
+    /**
      * Whether or not the field will display the value submitted with the last request
      */
     protected bool $respectSubmittedDataValue = true;
@@ -33,9 +40,7 @@ class Field
 
     protected $defaultValue;
 
-    public function __construct(protected ExtensionService $extensionService)
-    {
-    }
+    public function __construct(protected ExtensionService $extensionService) {}
 
     public function render(): array
     {
@@ -152,16 +157,22 @@ class Field
         if ($submitted) {
             $mappingResults = $this->getMappingResults();
             $mappingResultMessages = [
-                $mappingResults->getErrors(),
-                $mappingResults->getWarnings(),
-                $mappingResults->getNotices(),
+                $this->tokenNames ? $mappingResults->getFlattenedErrors() : $mappingResults->getErrors(),
+                $this->tokenNames ? $mappingResults->getFlattenedWarnings() : $mappingResults->getWarnings(),
+                $this->tokenNames ? $mappingResults->getFlattenedNotices() : $mappingResults->getNotices(),
             ];
 
             $messages = [];
             foreach ($mappingResultMessages as $messageArray) {
-                /** @var Message $message */
+                /** @var Message|Message[] $message */
                 foreach ($messageArray as $message) {
-                    $messages[] = $message->getMessage();
+                    if (is_array($message)) {
+                        foreach ($message as $singleMessage) {
+                            $messages[] = $singleMessage->getMessage();
+                        }
+                    } else {
+                        $messages[] = $message->getMessage();
+                    }
                 }
             }
 
@@ -193,10 +204,36 @@ class Field
     public function renderName(): string
     {
         if ($this->isPropertyField()) {
-            return $this->prefixPropertyFieldname($this->name);
+            $renderName = $this->prefixPropertyFieldname($this->name);
+        } else {
+            $renderName = $this->prefixFieldname($this->name);
         }
 
-        return $this->prefixFieldname($this->name);
+        return $renderName . (isset($this->attributes['multiple']) ? '[]' : '');
+    }
+
+    /**
+     * @return string[]
+     */
+    public function tokenNames(): array
+    {
+        if ($this->isPropertyField()) {
+            $name = $this->prefixPropertyFieldname($this->name);
+        } else {
+            $name = $this->prefixFieldname($this->name);
+        }
+        if ($this->tokenNames) {
+            $tokenNames = [];
+            foreach ($this->tokenNames as $tokenName) {
+                if (isset($this->attributes['multiple'])) {
+                    $tokenNames[] = sprintf('%s[*][%s]', $name, $tokenName);
+                } else {
+                    $tokenNames[] = $name . '[' . $tokenName . ']';
+                }
+            }
+            return $tokenNames;
+        }
+        return [$name];
     }
 
     public function getFieldNamePrefix(): string
@@ -251,6 +288,24 @@ class Field
     {
         unset($this->attributes[$attribute]);
 
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getTokenNames(): array
+    {
+        return $this->tokenNames;
+    }
+
+    /**
+     * @param string[] $tokenNames
+     * @return Field
+     */
+    public function setTokenNames(array $tokenNames): Field
+    {
+        $this->tokenNames = $tokenNames;
         return $this;
     }
 }
