@@ -185,9 +185,7 @@ class Form
         $fieldNames = [];
         /** @var Field $field */
         foreach ($this->fields as $field) {
-            foreach ($field->tokenNames() as $tokenName) {
-                $fieldNames[] = $tokenName;
-            }
+            $fieldNames[] = $field->renderName();
         }
 
         return $fieldNames;
